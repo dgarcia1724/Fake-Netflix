@@ -51,8 +51,9 @@ function NavBar({ children }) {
         alignItems: "center",
         justifyContent: "center",
         gap: "100px",
-        backgroundColor: "peachpuff",
-        color: "green",
+        backgroundColor: "white",
+        color: "red",
+        border: "1px solid black",
       }}
     >
       {children}
@@ -77,7 +78,7 @@ function Search({ query, setQuery }) {
 
 function MovieList({ movieList }) {
   return (
-    <ul style={{ backgroundColor: "lightblue" }}>
+    <ul style={{ backgroundColor: "black", color: "white" }}>
       {movieList.map((movie) => (
         <Movie movie={movie} key={movie.imdbID} />
       ))}
