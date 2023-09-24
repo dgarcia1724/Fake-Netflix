@@ -76,7 +76,7 @@ function Search({ query, setQuery }) {
 
 function MovieList({ movieList }) {
   return (
-    <ul>
+    <ul style={{ backgroundColor: "lightblue" }}>
       {movieList.map((movie) => (
         <Movie movie={movie} key={movie.imdbID} />
       ))}
