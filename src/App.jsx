@@ -52,6 +52,7 @@ function NavBar({ children }) {
         justifyContent: "center",
         gap: "100px",
         backgroundColor: "peachpuff",
+        color: "green",
       }}
     >
       {children}
