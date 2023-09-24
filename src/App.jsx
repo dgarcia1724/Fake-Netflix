@@ -1,35 +1,97 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import "./App.css";
+
+const KEY = "4fefc778";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [query, setQuery] = useState("");
+  const [movieList, setMovieList] = useState([]);
+
+  useEffect(
+    function () {
+      async function fetchMovieList() {
+        try {
+          const response = await fetch(
+            `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+          );
+          if (!response.ok)
+            throw new Error("Something went wrong with fetching movies");
+
+          const data = await response.json();
+          if (data.Response === "False") throw new Error("Movie not found");
+
+          console.log(data);
+          setMovieList(data.Search);
+        } catch (error) {
+          console.error(error.message);
+        }
+      }
+      fetchMovieList();
+    },
+    [query]
+  );
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <NavBar>
+        <Logo />
+        <Search query={query} setQuery={setQuery} />
+      </NavBar>
+      <MovieList movieList={movieList} />
+    </div>
+  );
 }
 
-export default App
+function NavBar({ children }) {
+  return (
+    <nav
+      style={{
+        padding: "30px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "100px",
+        backgroundColor: "peachpuff",
+      }}
+    >
+      {children}
+    </nav>
+  );
+}
+
+function Logo() {
+  return <h1>Netflix</h1>;
+}
+
+function Search({ query, setQuery }) {
+  return (
+    <input
+      type="text"
+      placeholder="Search Movies..."
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+    />
+  );
+}
+
+function MovieList({ movieList }) {
+  return (
+    <ul>
+      {movieList.map((movie) => (
+        <Movie movie={movie} key={movie.imdbID} />
+      ))}
+    </ul>
+  );
+}
+
+function Movie({ movie }) {
+  return (
+    <li>
+      <img src={movie.Poster} alt={movie.Title} />
+      <h3>{movie.Title}</h3>
+      <h3>{movie.Year}</h3>
+    </li>
+  );
+}
+
+export default App;
